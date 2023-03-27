@@ -13,7 +13,7 @@ import Home from './Pages/Home';
 import Register from './Pages/Register';
 import LogIn from './Pages/LogIn';
 import Cart from './Pages/Cart';
-import Wishlist from './Pages/Wishlist';
+import Wishlist from './Pages/Wishlist/Wishlist';
 import Profile from './Pages/Profile';
 import ShipOrders from './Pages/ShipOrders';
 import ManageProducts from './Pages/ManageProducts';
