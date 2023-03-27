@@ -13,7 +13,7 @@ import { ManageProductDialog } from "./ManageProductDialog";
 import { Product } from "../../Pages/Home";
 
 //images
-import default_image from "../../Images/default.png"
+import default_image from "../../Images/default.png";
 
 interface MyProps extends Product {
     to_manage_product: boolean
