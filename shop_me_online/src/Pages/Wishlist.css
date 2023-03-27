@@ -1,0 +1,19 @@
+.wishlist_container {
+    text-align: center;
+}
+
+.wishlist_context {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wishlist_product_display {
+    display: flex;
+    height: 230px;
+    width: 1000px;
+    margin-top: 13px;
+    font-family: "Rubik";
+    justify-content: space-between;
+    border-bottom: 1px solid lightgray;
+}

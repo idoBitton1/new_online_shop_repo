@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+.point_me {
+    cursor: pointer;
+    font-family: "Rubik";
+}
+
+.product_info {
+    display: flex;
+    text-align: left;
+}
+
+.headline {
+    font-family: "Arial";
+}
