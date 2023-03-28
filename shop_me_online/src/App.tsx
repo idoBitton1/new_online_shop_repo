@@ -14,7 +14,7 @@ import Register from './Pages/Register/Register';
 import LogIn from './Pages/LogIn/LogIn';
 import Cart from './Pages/Cart/Cart';
 import Wishlist from './Pages/Wishlist/Wishlist';
-import Profile from './Pages/Profile';
+import Profile from './Pages/Profile/Profile';
 import ShipOrders from './Pages/ShipOrders';
 import ManageProducts from './Pages/ManageProducts';
 
