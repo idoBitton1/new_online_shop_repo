@@ -10,7 +10,7 @@ import { ThemeProvider, createTheme } from "@mui/material";
 
 //Pages
 import Home from './Pages/Home/Home';
-import Register from './Pages/Register';
+import Register from './Pages/Register/Register';
 import LogIn from './Pages/LogIn/LogIn';
 import Cart from './Pages/Cart/Cart';
 import Wishlist from './Pages/Wishlist/Wishlist';
