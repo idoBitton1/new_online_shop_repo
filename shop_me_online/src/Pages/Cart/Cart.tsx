@@ -2,30 +2,24 @@ import React, { useEffect, useState } from "react";
 import useStyles from "./CartStyles";
 
 //Apollo and graphql
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GET_USER_CART_PRODUCTS, CHECK_FOR_CREDIT_CARD, GET_USER, GET_TRANSACTION_ID, GET_ALL_PRODUCTS } from "../../Queries/Queries";
 import { CREATE_TRANSACTION, SET_TRANSACTION_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../../Queries/Mutations";
 
 //redux
-import { useDispatch } from 'react-redux';
-import { actionsCreators } from "../../state";
+import { useDispatch, useSelector } from 'react-redux';
+import { ReduxState, actionsCreators } from "../../state";
 import { bindActionCreators } from 'redux';
-import { useSelector } from 'react-redux';
-import { ReduxState } from "../../state";
 
 //components
 import { Header } from "../../Components/Header/Header";
 import { CartProductDisplay } from "./CartProductDisplay/CartProductDisplay";
 
 //material - ui
-import { Button, Typography } from "@mui/material";
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Button } from "@mui/material";
 
 //icons
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import { CreditCardForm } from "../../Components/Forms/CreditCardForm";
 
 //function
 import { formatDate } from "../Home/Home";
