@@ -11,7 +11,7 @@ const useStyles = makeStyles()({
         borderBottom: "1px solid lightgray"
     },
 
-    product_left_section: {
+    product_info_section: {
         display: "flex",
         textAlign: "left"
     },
@@ -33,7 +33,10 @@ const useStyles = makeStyles()({
 
     delete_btn: {
         backgroundColor: "white",
-        border: "none"
+        border: "none",
+        '&:hover':  {
+            cursor: 'pointer'
+        }
     }
 });
 
