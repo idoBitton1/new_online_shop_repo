@@ -11,7 +11,7 @@ import { DisplayColumn } from "./DisplayColumn";
 
 //interface
 import { Result, Warehouse } from "../../Pages/ShipOrders";
-import { TransactionSecondType } from "../../Pages/Home";
+import { TransactionSecondType } from "../../Pages/Home/Home";
 import { Button } from "@mui/material";
 
 interface MyProps extends Result {

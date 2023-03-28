@@ -9,7 +9,7 @@ import { GET_TRANSACTIONS } from "../../Queries/Queries";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 //interface
-import { TransactionSecondType } from "../../Pages/Home";
+import { TransactionSecondType } from "../../Pages/Home/Home";
 
 interface MyProps {
     setSelectedTransactions: React.Dispatch<React.SetStateAction<TransactionSecondType[]>>

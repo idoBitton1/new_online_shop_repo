@@ -10,7 +10,7 @@ import { OrderProduct } from "./OrderProductDialog";
 import { ManageProductDialog } from "./ManageProductDialog";
 
 //interface
-import { Product } from "../../Pages/Home";
+import { Product } from "../../Pages/Home/Home";
 
 //images
 import default_image from "../../Images/default.png";

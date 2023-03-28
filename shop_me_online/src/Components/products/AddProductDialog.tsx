@@ -22,7 +22,7 @@ import Typography from "@mui/material/Typography";
 import { Button, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from "@mui/material";
 
 //interfaces
-import { Product } from "../../Pages/Home";
+import { Product } from "../../Pages/Home/Home";
 
 //images
 import img from "../../Images/j1.png";
