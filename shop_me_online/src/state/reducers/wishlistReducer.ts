@@ -1,4 +1,4 @@
-import { Wishlist } from "../../Pages/Home";
+import { Wishlist } from "../../Pages/Home/Home";
 import { WishlistActions } from "../actions";
 import { WishlistActionType } from "../action_types"
 

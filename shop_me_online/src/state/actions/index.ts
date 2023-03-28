@@ -1,15 +1,15 @@
 //filter_product
-import { Product } from "../../Pages/Home";
+import { Product } from "../../Pages/Home/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
 import { ProductsActionType } from "../action_types";
 //cart
 import { CartActionType } from "../action_types";
-import { CartProduct } from "../../Pages/Home";
+import { CartProduct } from "../../Pages/Home/Home";
 //user
 import { UserActionType } from "../action_types";
 //wishlist
 import { WishlistActionType } from "../action_types";
-import { Wishlist } from "../../Pages/Home";
+import { Wishlist } from "../../Pages/Home/Home";
 //transactions
 import { TransactionActionType } from "../action_types";
 

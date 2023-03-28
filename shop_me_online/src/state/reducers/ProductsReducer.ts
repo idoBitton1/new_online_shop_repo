@@ -1,4 +1,4 @@
-import { Product } from "../../Pages/Home";
+import { Product } from "../../Pages/Home/Home";
 import { ProductsActions } from "../actions";
 import { ProductsActionType } from "../action_types";
 

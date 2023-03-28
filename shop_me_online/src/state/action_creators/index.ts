@@ -1,13 +1,13 @@
 import { Dispatch } from "redux";
 
 //filtered_products
-import { Product } from "../../Pages/Home";
+import { Product } from "../../Pages/Home/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
 import { UpdateSupplyProps, ProductsActions, UpdateProductProps } from "../actions";
 import { ProductsActionType } from "../action_types";
 
 //cart
-import { CartProduct } from "../../Pages/Home";
+import { CartProduct } from "../../Pages/Home/Home";
 import { CartActions, ChangeQuantityProperties, ChangeSizeProperties } from "../actions";
 import { CartActionType } from "../action_types";
 
@@ -16,7 +16,7 @@ import { UserActions } from "../actions";
 import { UserActionType } from "../action_types";
 
 //wishlist
-import { Wishlist } from "../../Pages/Home";
+import { Wishlist } from "../../Pages/Home/Home";
 import { WishlistActions } from "../actions";
 import { WishlistActionType } from "../action_types";
 

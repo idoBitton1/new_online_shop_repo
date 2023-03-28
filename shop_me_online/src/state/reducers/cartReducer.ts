@@ -1,4 +1,4 @@
-import { CartProduct } from "../../Pages/Home";
+import { CartProduct } from "../../Pages/Home/Home";
 import { CartActions } from "../actions";
 import { CartActionType } from "../action_types";
 
