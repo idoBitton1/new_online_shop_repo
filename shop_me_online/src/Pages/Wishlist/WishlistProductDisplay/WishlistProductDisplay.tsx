@@ -24,7 +24,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import default_image from "../../../Images/default.png";
 
 //interface
-import { Product } from "../../Home";
+import { Product } from "../../Home/Home";
 
 interface MyProps {
     user_id: string,
@@ -135,7 +135,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
     return (
         <>
         <div className={classes.wishlist_product_container}>
-            <div className={classes.product_left_section}>
+            <div className={classes.product_info_section}>
                 <img src={image} alt="product" className={classes.product_img} />
                 <div className={classes.product_info}>
                     <p className={classes.product_name}>{product_info.name}</p>
@@ -143,8 +143,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
                     <p>Left in stock: {product_info.quantity}</p>
                     
                     <Button variant="contained"
-                    onClick={toggleDialog}
-                    >
+                    onClick={toggleDialog}>
                         Buy now
                     </Button>
                 </div>
