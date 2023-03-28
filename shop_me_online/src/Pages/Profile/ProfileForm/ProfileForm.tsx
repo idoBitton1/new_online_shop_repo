@@ -237,21 +237,27 @@ export const ProfileForm = () => {
                         />
                     }
 
-                    {is_manager ? <></> : <br />}
+                    { is_manager ? <></> : <br /> }
 
-                    <br />
                     {
-                    has_credit_card
-                    ?
-                    <h3 className={classes.credit_card_text} onClick={handleRemoveCreditCardClick}>
-                        <RemoveCircleOutlineOutlinedIcon /> &nbsp; remove credit card
-                    </h3>
-                    :
-                    <h3 className={classes.credit_card_text} onClick={handleCreditCardClick}>
-                        <AddCircleOutlineOutlinedIcon /> &nbsp; add credit card
-                    </h3>
+                        is_manager 
+                        ? 
+                        <></>
+                        : 
+                        (
+                            has_credit_card
+                            ?
+                            <h3 className={classes.credit_card_text} onClick={handleRemoveCreditCardClick}>
+                                <RemoveCircleOutlineOutlinedIcon /> &nbsp; remove credit card
+                            </h3>
+                            :
+                            <h3 className={classes.credit_card_text} onClick={handleCreditCardClick}>
+                                <AddCircleOutlineOutlinedIcon /> &nbsp; add credit card
+                            </h3>
+                        )
                     }
 
+                    <br />
                     <br />
                     <h3 className={classes.asterisk_text}>
                         *if no data is displaying, go to another page and come back
