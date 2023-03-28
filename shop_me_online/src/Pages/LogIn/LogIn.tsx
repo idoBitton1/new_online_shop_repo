@@ -1,17 +1,20 @@
 import React from "react"
-import './LogIn.css';
+import useStyles from "./LogInStyles";
 
 //components
 import { Header } from '../../Components/Header/Header';
 import { LogInForm } from "../../Components/Forms/LogInForm";
 
 const LogIn = () => {
+    //styles
+    const { classes } = useStyles();
+
     return (
-        <div className="login_container">
+        <div>
             <Header />
 
-            <div className="login_form">
-                <h1 className="headline"> Welcome back </h1>
+            <div className={classes.login_form}>
+                <h1 className={classes.headline}> Welcome back </h1>
                 <LogInForm />
             </div>
         </div>
