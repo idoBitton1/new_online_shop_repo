@@ -49,6 +49,7 @@ export const ProfileForm = () => {
         }
     });
     const { data: credit_data } = useQuery(CHECK_FOR_CREDIT_CARD, {
+        fetchPolicy: "network-only",
         variables: {
             id: user.token?.user_id
         }
@@ -122,7 +123,7 @@ export const ProfileForm = () => {
             }
         });
 
-        window.location.reload(); //refresh the window
+        //window.location.reload(); //refresh the window
     }
 
     const toggleDialog = () => {
@@ -211,27 +212,25 @@ export const ProfileForm = () => {
                     <br />
                     {
                         is_manager
-                            ?
-                            <></>
-                            :
-                            (
-                                <Field as={TextField} name="address"
-                                    label="address"
-                                    variant="outlined"
-                                    value={props.values.address}
-                                    onChange={props.handleChange}
-                                    margin="normal"
-                                    fullWidth
-                                    helperText={<ErrorMessage name="address" />}
-                                    InputProps={{
-                                        startAdornment: (
-                                          <InputAdornment position="start">
-                                            <HomeOutlinedIcon />
-                                          </InputAdornment>
-                                        )
-                                    }}
-                                />
-                            )
+                        ?
+                        <></>
+                        :
+                        <Field as={TextField} name="address"
+                            label="address"
+                            variant="outlined"
+                            value={props.values.address}
+                            onChange={props.handleChange}
+                            margin="normal"
+                            fullWidth
+                            helperText={<ErrorMessage name="address" />}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <HomeOutlinedIcon />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
                     }
 
                     {is_manager ? <></> : <br />}
