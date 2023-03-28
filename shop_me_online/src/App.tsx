@@ -11,7 +11,7 @@ import { ThemeProvider, createTheme } from "@mui/material";
 //Pages
 import Home from './Pages/Home/Home';
 import Register from './Pages/Register';
-import LogIn from './Pages/LogIn';
+import LogIn from './Pages/LogIn/LogIn';
 import Cart from './Pages/Cart/Cart';
 import Wishlist from './Pages/Wishlist/Wishlist';
 import Profile from './Pages/Profile';
