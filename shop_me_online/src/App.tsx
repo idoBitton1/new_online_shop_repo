@@ -16,7 +16,7 @@ import Cart from './Pages/Cart/Cart';
 import Wishlist from './Pages/Wishlist/Wishlist';
 import Profile from './Pages/Profile/Profile';
 import ShipOrders from './Pages/ShipOrders';
-import ManageProducts from './Pages/ManageProducts';
+import ManageProducts from './Pages/ManageProducts/ManageProducts';
 
 const algorithm_client = new ApolloClient({
   cache: new InMemoryCache(),
