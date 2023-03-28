@@ -3,7 +3,7 @@ import useStyles from "./LogInStyles";
 
 //components
 import { Header } from '../../Components/Header/Header';
-import { LogInForm } from "../../Components/Forms/LogInForm";
+import { LogInForm } from "./LogInForm/LogInForm";
 
 const LogIn = () => {
     //styles
