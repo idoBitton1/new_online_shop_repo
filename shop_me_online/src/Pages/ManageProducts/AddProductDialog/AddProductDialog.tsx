@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import useStyles from "./AddProductDialogStyles";
-import "../../../Components/products/Products.css";
 
 //form
 import * as Yup from "yup";
@@ -285,7 +284,7 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
                         className={classes.add_btn}>
                             Add
                         </Button>
-                        
+
                         <Typography className={classes.err_text}>
                             {err_text ? err_text : ""}
                         </Typography>
