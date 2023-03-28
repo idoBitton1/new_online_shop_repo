@@ -57,7 +57,8 @@ const useStyles = makeStyles()({
     },
 
     error_text: {
-        color: "red"
+        color: "red",
+        fontFamily: "Rubik"
     },
     
     delete_btn: {
