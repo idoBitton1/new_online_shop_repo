@@ -102,7 +102,7 @@ export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCar
         //close the dialog
         toggleDialog();
 
-        window.location.reload(); //refresh the window
+        //window.location.reload(); //refresh the window
     }
 
     return (
