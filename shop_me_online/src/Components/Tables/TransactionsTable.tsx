@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import '../../Pages/ShipOrders.css';
+import '../../Pages/ShipOrders/ShipOrders.css';
 
 //apollo and graphql
 import { useQuery } from "@apollo/client";

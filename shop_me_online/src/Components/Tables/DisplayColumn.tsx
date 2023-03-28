@@ -1,5 +1,5 @@
 import React from "react";
-import '../../Pages/ShipOrders.css';
+import '../../Pages/ShipOrders/ShipOrders.css';
 
 //components
 import { DisplayCell } from "./DisplayCell";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import '../../Pages/ShipOrders.css';
+import '../../Pages/ShipOrders/ShipOrders.css';
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client";
@@ -10,7 +10,7 @@ import { DisplayCell } from "./DisplayCell";
 import { DisplayColumn } from "./DisplayColumn";
 
 //interface
-import { Result, Warehouse } from "../../Pages/ShipOrders";
+import { Result, Warehouse } from "../../Pages/ShipOrders/ShipOrders";
 import { TransactionSecondType } from "../../Pages/Home/Home";
 import { Button } from "@mui/material";
 

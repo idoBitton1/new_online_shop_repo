@@ -1,11 +1,11 @@
 import React from "react";
-import '../../Pages/ShipOrders.css';
+import '../../Pages/ShipOrders/ShipOrders.css';
 
 //material ui
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 //interface
-import { Warehouse } from "../../Pages/ShipOrders";
+import { Warehouse } from "../../Pages/ShipOrders/ShipOrders";
 
 interface MyProps {
     setSelectedWarehouses: React.Dispatch<React.SetStateAction<Warehouse[]>>

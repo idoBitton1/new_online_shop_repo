@@ -1,5 +1,5 @@
 import React from "react";
-import '../../Pages/ShipOrders.css';
+import '../../Pages/ShipOrders/ShipOrders.css';
 
 interface MyProps {
     text: string | number
