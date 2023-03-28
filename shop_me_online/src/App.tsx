@@ -15,7 +15,7 @@ import LogIn from './Pages/LogIn/LogIn';
 import Cart from './Pages/Cart/Cart';
 import Wishlist from './Pages/Wishlist/Wishlist';
 import Profile from './Pages/Profile/Profile';
-import ShipOrders from './Pages/ShipOrders';
+import ShipOrders from './Pages/ShipOrders/ShipOrders';
 import ManageProducts from './Pages/ManageProducts/ManageProducts';
 
 const algorithm_client = new ApolloClient({
