@@ -31,7 +31,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 
 //interface
-import { MyFormValues } from "./RegisterForm";
+import { MyFormValues } from "../../Pages/Register/RegisterForm/RegisterForm";
 
 export const ProfileForm = () => {
     //redux states
