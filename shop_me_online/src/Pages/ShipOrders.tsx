@@ -16,7 +16,7 @@ import { ChooseWarehouse } from "../Components/Tables/ChooseWarehouse";
 import { Button } from "@mui/material"
 
 //interface
-import { TransactionSecondType } from "./Home";
+import { TransactionSecondType } from "./Home/Home";
 import { DisplayResults } from "../Components/Tables/DisplayResults";
 
 export interface Warehouse {
