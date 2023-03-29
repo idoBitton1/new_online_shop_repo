@@ -14,9 +14,9 @@ import { useSelector } from 'react-redux';
 import { ReduxState } from "../../state";
 
 //components
-import { Header } from '../../Components/Header/Header';
-import { NavigationBar } from '../../Components/Header/NavigationBar';
-import { ProductsGrid } from '../../Components/products/ProductsGrid';
+import { Header } from "../../Common/Header/Header";
+import { NavigationBar } from '../../Common/NavigationBar/NavigationBar';
+import { ProductsGrid } from '../../Common/ProductGrid/ProductsGrid';
 
 export interface Product {
   id: string,
