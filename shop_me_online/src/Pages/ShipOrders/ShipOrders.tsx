@@ -8,16 +8,16 @@ import { GET_MINIMUM_SHIPMENT_COST } from "../../Queries/Queries";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 //components
-import { Header } from "../../Components/Header/Header";
-import { TransactionsTable } from "../../Components/Tables/TransactionsTable";
-import { ChooseWarehouse } from "../../Components/Tables/ChooseWarehouse";
+import { Header } from "../../Common/Header/Header";
+import { TransactionsTable } from "./TransactionsTable/TransactionsTable";
+import { ChooseWarehouse } from "./ChooseWarehouse/ChooseWarehouse";
+import { DisplayResults } from "./DisplayResults/DisplayResults";
 
 //material-ui
 import { Button } from "@mui/material"
 
 //interface
 import { TransactionSecondType } from "../Home/Home";
-import { DisplayResults } from "../../Components/Tables/DisplayResults";
 
 export interface Warehouse {
     name: string,
@@ -125,7 +125,7 @@ const ShipOrders = () => {
 
     const checkDistance = async(origin_address: string, destination_address: string) => {
         //setup
-        const key: string = "gWROMgSB5r701uDW5UgDvE3aUQepw";
+        const key: string = "";
         let http_address = `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${origin_address}&destinations=${destination_address}&key=${key}`;
 
         let delivery_fee: number = 0;
