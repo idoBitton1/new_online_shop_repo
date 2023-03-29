@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { ReduxState } from "../../../state";
 
 //components
-import { CreditCardForm } from "../../../Components/Forms/CreditCardForm";
+import { CreditCardForm } from "../../../Common/CreditCardFrom/CreditCardForm";
 
 //material-ui
 import { TextField, Button, Typography, InputAdornment } from '@mui/material';

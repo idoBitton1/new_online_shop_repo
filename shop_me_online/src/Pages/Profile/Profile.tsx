@@ -2,7 +2,7 @@ import React from "react";
 import useStyles from "./ProfileStyles";
 
 //components
-import { Header } from "../../Components/Header/Header";
+import { Header } from "../../Common/Header/Header";
 import { ProfileForm } from "./ProfileForm/ProfileForm";
 
 const Profile = () => {
