@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { ReduxState } from "../../state";
 
 //components
-import { Header } from "../../Components/Header/Header";
+import { Header } from "../../Common/Header/Header";
 import { WishlistProductDisplay } from "./WishlistProductDisplay/WishlistProductDisplay";
 
 const Wishlist = () => {

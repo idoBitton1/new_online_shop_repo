@@ -2,7 +2,7 @@ import React from 'react'
 import useStyles from './RegisterStyles';
 
 //components
-import { Header } from '../../Components/Header/Header';
+import { Header } from "../../Common/Header/Header";
 import { RegisterForm } from './RegisterForm/RegisterForm';
 
 interface MyProps {

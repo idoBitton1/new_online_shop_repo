@@ -12,7 +12,7 @@ import { actionsCreators, ReduxState } from "../../../state";
 import { bindActionCreators } from 'redux';
 
 //components
-import { OrderProduct } from "../../../Components/products/OrderProductDialog";
+import { OrderProduct } from "../../../Common/ProductGrid/ProductDisplay/OrderProductDialog/OrderProductDialog";
 
 //material ui
 import { Button } from "@mui/material";
