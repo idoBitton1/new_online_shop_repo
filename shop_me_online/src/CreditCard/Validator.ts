@@ -1,8 +1,8 @@
 import valid from "card-validator";
 
 //interface
-import { MyFormValues as MyProps } from "../Components/Forms/CreditCardForm";
-import { Errors } from "../Components/Forms/CreditCardForm";
+import { MyFormValues as MyProps } from "../Common/CreditCardFrom/CreditCardForm";
+import { Errors } from "../Common/CreditCardFrom/CreditCardForm";
 
 export default function validator(values: MyProps) {
   let creditCard: any = valid.number(values.card_number);
@@ -13,7 +13,7 @@ export default function validator(values: MyProps) {
 
   let errors: Errors = {
     show: true,
-    color: "red",
+    valid: false,
     message: "An unknown error occured. Please try again later",
     cname: false,
     cnumber: false,
@@ -63,7 +63,7 @@ export default function validator(values: MyProps) {
     errors.cexp &&
     errors.ccvv
   ) {
-    errors.color = "green";
+    errors.valid = true;
     errors.message = "Credit Card is valid";
   }
 
