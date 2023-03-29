@@ -11,9 +11,9 @@ import { ReduxState, actionsCreators } from "../../state";
 import { bindActionCreators } from 'redux';
 
 //components
-import { Header } from "../../Components/Header/Header";
-import { ProductsGrid } from "../../Components/products/ProductsGrid";
-import { NavigationBar } from "../../Components/Header/NavigationBar";
+import { Header } from "../../Common/Header/Header";
+import { ProductsGrid } from "../../Common/ProductGrid/ProductsGrid";
+import { NavigationBar } from "../../Common/NavigationBar/NavigationBar";
 import { AddProductDialog } from "./AddProductDialog/AddProductDialog";
 
 const ManageProducts = () => {
