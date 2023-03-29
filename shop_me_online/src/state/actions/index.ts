@@ -1,6 +1,6 @@
 //filter_product
 import { Product } from "../../Pages/Home/Home";
-import { Filters } from "../../Components/Header/NavigationBar";
+import { Filters } from "../../Common/NavigationBar/NavigationBar";
 import { ProductsActionType } from "../action_types";
 //cart
 import { CartActionType } from "../action_types";

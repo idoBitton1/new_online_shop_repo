@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 
 //filtered_products
 import { Product } from "../../Pages/Home/Home";
-import { Filters } from "../../Components/Header/NavigationBar";
+import { Filters } from "../../Common/NavigationBar/NavigationBar";
 import { UpdateSupplyProps, ProductsActions, UpdateProductProps } from "../actions";
 import { ProductsActionType } from "../action_types";
 
