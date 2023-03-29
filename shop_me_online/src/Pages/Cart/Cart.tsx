@@ -12,7 +12,7 @@ import { ReduxState, actionsCreators } from "../../state";
 import { bindActionCreators } from 'redux';
 
 //components
-import { Header } from "../../Components/Header/Header";
+import { Header } from "../../Common/Header/Header";
 import { CartProductDisplay } from "./CartProductDisplay/CartProductDisplay";
 
 //material - ui

@@ -2,7 +2,7 @@ import React from "react";
 import useStyles from "./CreditCardDialogStyles";
 
 //components
-import { CreditCardForm } from "../../../Components/Forms/CreditCardForm";
+import { CreditCardForm } from "../../../Common/CreditCardFrom/CreditCardForm";
 
 //material-ui
 import { Dialog, DialogTitle, Typography, DialogContent } from "@mui/material";

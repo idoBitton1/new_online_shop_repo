@@ -13,7 +13,7 @@ import { actionsCreators, ReduxState } from "../../../state";
 import { bindActionCreators } from 'redux';
 
 //material-ui
-import { Select, FormControl, MenuItem, SelectChangeEvent } from "@mui/material";
+import { Select, FormControl, MenuItem, SelectChangeEvent, Typography } from "@mui/material";
 
 //icons
 import CloseIcon from '@mui/icons-material/Close';
@@ -272,7 +272,9 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
                         <p>{order_amount}</p>
                     }
                     <p className={classes.change_text} onClick={handleChangeQuantity}>change</p>
-                    <p className={classes.error_text}>{err_text ? err_text : ""}</p>
+                    <Typography className={classes.err_text}>
+                            {err_text ? err_text : ""}
+                    </Typography>
                 </div>
             </div>
 
