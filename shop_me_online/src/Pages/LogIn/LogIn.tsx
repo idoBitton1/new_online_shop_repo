@@ -2,7 +2,7 @@ import React from "react"
 import useStyles from "./LogInStyles";
 
 //components
-import { Header } from '../../Components/Header/Header';
+import { Header } from "../../Common/Header/Header";
 import { LogInForm } from "./LogInForm/LogInForm";
 
 const LogIn = () => {
