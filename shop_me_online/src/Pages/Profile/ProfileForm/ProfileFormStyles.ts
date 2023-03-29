@@ -5,7 +5,12 @@ const useStyles = makeStyles()({
         display: "flex", 
         fontFamily: "Rubik",
         alignItems: "center",  
-        textAlign: "left",                      
+        textAlign: "left",     
+        textDecoration: "none",
+        fontWeight: "normal",
+        fontSize: "medium",
+        marginTop: "0px",
+        marginBottom: "-5px",                 
         '&:hover':  {
             cursor: 'pointer'
         }
@@ -14,7 +19,12 @@ const useStyles = makeStyles()({
     asterisk_text: {
         fontFamily: "Rubik",
         color: "GrayText", 
-        textAlign: "left"
+        textAlign: "left",
+        textDecoration: "none",
+        fontWeight: "normal",
+        fontSize: "medium",
+        marginTop: "0px",
+        marginBottom: "-5px"
     },
 
     update_information_btn: {

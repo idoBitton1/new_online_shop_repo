@@ -56,9 +56,10 @@ const useStyles = makeStyles()({
         }
     },
 
-    error_text: {
-        color: "red",
-        fontFamily: "Rubik"
+    err_text: {
+        marginTop: 2,
+        fontFamily: "Rubik",
+        color: "red"
     },
     
     delete_btn: {

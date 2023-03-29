@@ -4,6 +4,11 @@ const useStyles = makeStyles()({
     sub_text: {
         color: "gray",
         fontFamily: "Rubik",
+        textDecoration: "none",
+        fontWeight: "normal",
+        fontSize: "medium",
+        marginTop: "0px",
+        marginBottom: "-5px",
         '&:hover':  {
             cursor: 'pointer'
         }
