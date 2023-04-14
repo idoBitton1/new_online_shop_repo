@@ -142,3 +142,179 @@ mutation Mutation($name: String!, $price: Int!, $quantity: Int!, $category: Stri
   }
 }
 `;
+
+///////////////////////////////////////////
+
+export const _CREATE_USER = gql`
+mutation MyMutation($id: UUID, $first_name: String!, $last_name: String!, $password: String!, $address: String!, $email: String!, $is_manager: Boolean!, $token: String!) {
+  createUser(
+    input: {user: {id: $id, firstName: $first_name, lastName: $last_name, password: $password, email: $email, isManager: $is_manager, address: $address, token: $token}}
+  ) {
+    userEdge {
+      node {
+        id
+      }
+    }
+  }
+}
+`;
+
+export const _LOGIN_USER = gql`
+mutation MyMutation($email: String!, $password: String!) {
+  loginUser(input: {_email: $email, _password: $password}) {
+    userData {
+      id
+      email
+      isManager
+    }
+  }
+}
+`;
+
+export const _CHECK_REGISTER_INFORMATION = gql`
+mutation MyMutation($first_name: String!, $last_name: String!, $password: String!, $address: String!, $is_manager: Boolean!) {
+  checkRegisterInformation(
+    input: {firstName: $first_name, lastName: $last_name, password: $password, address: $address, isManager: $is_manager}
+  ) {
+    clientMutationId
+  }
+}
+`;
+
+export const _UPDATE_PRODUCT_QUANTITY = gql`
+mutation MyMutation($id: UUID!, $quantity: Int!) {
+  updateProductById(input: {productPatch: {quantity: $quantity}, id: $id}) {
+    clientMutationId
+  }
+}
+`;
+
+export const _ADD_PRODUCT_TO_CART = gql`
+mutation MyMutation($item_id: UUID!, $transaction_id: UUID!, $product_id: UUID!, $amount: Int!, $size: String!) {
+  createCart(
+    input: {cart: {itemId: $item_id, transactionId: $transaction_id, productId: $product_id, amount: $amount, size: $size}}
+  ) {
+    cartEdge {
+      node {
+        itemId
+      }
+    }
+  }
+}
+`;
+
+export const _REMOVE_PRODUCT_FROM_CART = gql`
+mutation MyMutation($item_id: UUID!) {
+  deleteCartByItemId(input: {itemId: $item_id}) {
+    clientMutationId
+    deletedCartId
+  }
+}
+`;
+
+export const _SET_TRANSACTION_AS_PAID = gql`
+mutation MyMutation($id: UUID!, $ordering_time: Datetime!) {
+  setTransactionAsPaid(input: {_id: $id, _newTime: $ordering_time}) {
+    clientMutationId
+  }
+}
+`;
+
+export const _ADD_TO_WISHLIST = gql`
+mutation MyMutation($user_id: UUID!, $product_id: UUID!) {
+  createWishlist(input: {wishlist: {userId: $user_id, productId: $product_id}}) {
+    clientMutationId
+  }
+}
+`;
+
+export const _UPDATE_CART_PRODUCT_AMOUNT = gql`
+mutation MyMutation($item_id: UUID!, $amount: Int!) {
+  updateCartByItemId(input: {cartPatch: {amount: $amount}, itemId: $item_id}) {
+    clientMutationId
+  }
+}
+`;
+
+export const _UPDATE_CART_PRODUCT_SIZE = gql`
+mutation MyMutation($item_id: UUID!, $size: String!) {
+  updateCartByItemId(input: {cartPatch: {size: $size}, itemId: $item_id}) {
+    clientMutationId
+  }
+}
+`;
+
+export const _UPDATE_USER_INFORMATION = gql`
+mutation MyMutation($id: UUID!, $first_name: String!, $last_name: String!, $password: String!, $email: String!, $address: String!) {
+  updateUserById(
+    input: {userPatch: {firstName: $first_name, lastName: $last_name, password: $password, email: $email, address: $address}, id: $id}
+  ) {
+    clientMutationId
+  }
+}
+`;
+
+export const _ADD_CREDIT_CARD = gql`
+mutation MyMutation($id: UUID!, $credit_card_number: String!) {
+  updateUserById(input: {userPatch: {creditCardNumber: $credit_card_number}, id: $id}) {
+    clientMutationId
+  }
+}
+`;
+
+export const _REMOVE_CREDIT_CARD = gql`
+mutation MyMutation($id: UUID!) {
+  deleteCreditCard(input: {_id: $id}) {
+    clientMutationId
+  }
+}
+`;
+
+export const _CREATE_TRANSACTION = gql`
+mutation MyMutation($user_id: UUID!, $address: String!, $ordering_time: Datetime!) {
+  createTransaction(
+    input: {transaction: {address: $address, paid: false, orderingTime: $ordering_time, userId: $user_id}}
+  ) {
+    transaction {
+      id
+    }
+  }
+}
+`;
+
+export const _DELETE_TRANSACTION = gql`
+mutation MyMutation($id: UUID!) {
+  deleteTransactionById(input: {id: $id}) {
+    clientMutationId
+    deletedTransactionId
+  }
+}
+`;
+
+export const _UPDATE_PRODUCT_DETAILS = gql`
+mutation MyMutation($id: UUID!, $price: Float!, $quantity: Int!, $category: String!, $img_uploaded: Boolean!) {
+  updateProductById(
+    input: {productPatch: {price: $price, quantity: $quantity, category: $category, imgUploaded: $img_uploaded}, id: $id}
+  ) {
+    clientMutationId
+  }
+}
+`;
+
+export const _ADD_PRODUCT_TO_PRODUCTS = gql`
+mutation MyMutation($name: String!, $price: Float!, $quantity: Int!, $category: String!, $img_location: String!) {
+  createProduct(
+    input: {product: {name: $name, quantity: $quantity, price: $price, category: $category, imgLocation: $img_location}}
+  ) {
+    product {
+      id
+      name
+      quantity
+      price
+      category
+      imgLocation
+      imgUploaded
+    }
+  }
+}
+`;
