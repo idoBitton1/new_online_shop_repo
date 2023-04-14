@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client"
-import { ADD_PRODUCT_TO_CART, ADD_TO_WISHLIST } from "../../../../Queries/Mutations";
+import { _ADD_PRODUCT_TO_CART, _ADD_TO_WISHLIST } from "../../../../Queries/Mutations";
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -53,8 +53,8 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     const { addProductToCart, addToWishlist } = bindActionCreators(actionsCreators, dispatch);
     
     //mutations
-    const [addProductToCartMutation] = useMutation(ADD_PRODUCT_TO_CART);
-    const [addProductToWishlist, { error }] = useMutation(ADD_TO_WISHLIST);
+    const [addProductToCartMutation] = useMutation(_ADD_PRODUCT_TO_CART);
+    const [addProductToWishlist, { error }] = useMutation(_ADD_TO_WISHLIST);
 
 
     //fetch the product image from the s3
@@ -85,7 +85,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         }
 
         //checks that size isn't empty
-        if (size === "") {
+        if (size === "" && !category.includes("bags")) {
             setErrText("please choose size");
             return;
         }
@@ -139,8 +139,8 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         try {
             await addProductToWishlist({
                 variables: {
-                    userId: user.token.user_id,
-                    productId: id
+                    user_id: user.token.user_id,
+                    product_id: id
                 }
             });
         } catch (err: any) {

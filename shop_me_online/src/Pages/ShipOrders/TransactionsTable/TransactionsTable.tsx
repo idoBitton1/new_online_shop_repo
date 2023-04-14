@@ -3,7 +3,7 @@ import useStyles from "./TransactionsTableStyles";
 
 //apollo and graphql
 import { useQuery } from "@apollo/client";
-import { GET_TRANSACTIONS } from "../../../Queries/Queries";
+import { _GET_TRANSACTIONS } from "../../../Queries/Queries";
 
 //material ui
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -38,24 +38,34 @@ export const TransactionsTable: React.FC<MyProps> = ({setSelectedTransactions}) 
     const [transactions, setTransactions] = useState<TransactionSecondType[]>([]);
     
     //queries
-    useQuery(GET_TRANSACTIONS, {
+    useQuery(_GET_TRANSACTIONS, {
         fetchPolicy: "network-only",
         onCompleted(data) {
-            let temp: TransactionSecondType[] = data.getTransactions;
-            temp = temp.map((item) => {
-                //show the date
-                let fixed_time = (Number)(item.ordering_time.slice(0, -3));
-                const timestamp_to_date = new Date(fixed_time * 1000);
+            let temp: TransactionSecondType[] = convertType(data.getTransactions.nodes);
 
+            temp = temp.map((item) => {
                 return {
                     ...item,
-                    ordering_time: `${timestamp_to_date.getFullYear()}-${(timestamp_to_date.getMonth() + 1) >= 10 ? timestamp_to_date.getMonth() + 1 : `0${timestamp_to_date.getMonth() + 1}`}-${timestamp_to_date.getDate() >= 10 ? timestamp_to_date.getDate() : `0${timestamp_to_date.getDate()}`}`
+                    ordering_time: item.ordering_time.slice(0, -9)
                 }
             });
 
             setTransactions([...temp]);
         }
     });
+
+    const convertType = (objects: any[]): TransactionSecondType[] => {
+        const original = objects;
+        let all_transactions: TransactionSecondType[] = [];
+        original.map((object: any) => all_transactions.push({
+            id: object.id,
+            address: object.address,
+            ordering_time: object.orderingTime,
+            sum: object.sum
+        }));
+
+        return all_transactions;
+    }
 
     return (
         <div className={classes.transaction_table_container}>

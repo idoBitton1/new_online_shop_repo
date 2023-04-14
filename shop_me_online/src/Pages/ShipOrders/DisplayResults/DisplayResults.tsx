@@ -3,16 +3,19 @@ import useStyles from "./DisplayResultsStyles";
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client";
-import { DELETE_TRANSACTION } from "../../../Queries/Mutations";
+import { _DELETE_TRANSACTION } from "../../../Queries/Mutations";
 
 //components
 import { DisplayCell } from "../../../Common/DisplayCell/DisplayCell";
 import { DisplayColumn } from "./DisplayColumn/DisplayColumn";
 
+//material-ui
+import { Button } from "@mui/material";
+
 //interface
 import { Result, Warehouse } from "../ShipOrders";
 import { TransactionSecondType } from "../../Home/Home";
-import { Button } from "@mui/material";
+
 
 interface MyProps extends Result {
     selected_transactions: TransactionSecondType[],
@@ -31,7 +34,7 @@ export const DisplayResults: React.FC<MyProps> = ({result_matrix, total_cost, se
     );
 
     //mutations
-    const [deleteTransaction] = useMutation(DELETE_TRANSACTION);
+    const [deleteTransaction] = useMutation(_DELETE_TRANSACTION);
 
 
     //delete the selected transactions 

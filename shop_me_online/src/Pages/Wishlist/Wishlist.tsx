@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import useStyles from "./WishlistStyles";
 
 //Apollo and graphql
-import { useLazyQuery, useQuery } from "@apollo/client"
-import { GET_USER_WISHLIST, GET_ALL_PRODUCTS } from "../../Queries/Queries";
+import { useLazyQuery } from "@apollo/client"
+import { _GET_USER_WISHLIST } from "../../Queries/Queries";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -16,6 +16,9 @@ import { ReduxState } from "../../state";
 import { Header } from "../../Common/Header/Header";
 import { WishlistProductDisplay } from "./WishlistProductDisplay/WishlistProductDisplay";
 
+//custom hooks
+import useGetAllProducts from "../../CustomHooks/useGetAllProducts";
+
 const Wishlist = () => {
     //styles
     const { classes } = useStyles();
@@ -27,23 +30,21 @@ const Wishlist = () => {
 
     //redux actions
     const dispatch = useDispatch();
-    const { setWishlist, setProducts, setFilterProducts } = bindActionCreators(actionsCreators, dispatch);
+    const { setWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //queries
     //get all products, because the wishlist products dont hold the same information as the 
     //regular products is holding (such as the price, img_location etc.)
-    useQuery(GET_ALL_PRODUCTS, {
-        fetchPolicy: "network-only",
-        onCompleted(data) {
-          setProducts(data.getAllProducts);
-          setFilterProducts(data.getAllProducts);
-        },
-    });
+    useGetAllProducts();
     //when the info comes back, set the information in the wishlist redux state
-    const [getWishlistProducts] = useLazyQuery(GET_USER_WISHLIST, {
+    const [getWishlistProducts] = useLazyQuery(_GET_USER_WISHLIST, {
         fetchPolicy: "network-only",
         onCompleted(data) {
-            setWishlist(data.getUserWishlist);
+            const original = data.getUserWishlist.nodes;
+            let all_wishlist: any = [];
+            original.map((product: any) => all_wishlist.push({user_id: product.userId, product_id: product.productId}));
+            
+            setWishlist(all_wishlist);
         }
     });
 
@@ -53,7 +54,7 @@ const Wishlist = () => {
         if (user.token) {
             getWishlistProducts({
                 variables: {
-                    userId: user.token.user_id
+                    user_id: user.token.user_id
                 }
             });
         }
@@ -72,7 +73,6 @@ const Wishlist = () => {
                         const product_index = products.products.findIndex((product) => product.id === wishlist_product.product_id);
                         let img_location = products.products[product_index].img_location;
                         let img_uploaded = products.products[product_index].img_uploaded;
-
                         
                         return(
                             <WishlistProductDisplay 

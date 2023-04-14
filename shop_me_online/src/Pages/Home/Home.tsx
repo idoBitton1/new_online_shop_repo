@@ -2,21 +2,22 @@ import React, { useEffect } from 'react';
 //import './App.css';
 
 //Apollo and graphql
-import { useLazyQuery, useQuery, useMutation } from "@apollo/client"
-import { GET_ALL_PRODUCTS, GET_TRANSACTION_ID, GET_USER } from "../../Queries/Queries";
-import { CREATE_TRANSACTION } from '../../Queries/Mutations';
+import { useLazyQuery, useMutation } from "@apollo/client"
+import { _GET_TRANSACTION_ID, _GET_USER } from "../../Queries/Queries";
+import { _CREATE_TRANSACTION } from '../../Queries/Mutations';
 
 //redux
-import { useDispatch } from 'react-redux';
-import { actionsCreators } from "../../state";
+import { useDispatch, useSelector } from 'react-redux';
+import { actionsCreators, ReduxState } from "../../state";
 import { bindActionCreators } from 'redux';
-import { useSelector } from 'react-redux';
-import { ReduxState } from "../../state";
 
 //components
 import { Header } from "../../Common/Header/Header";
 import { NavigationBar } from '../../Common/NavigationBar/NavigationBar';
 import { ProductsGrid } from '../../Common/ProductGrid/ProductsGrid';
+
+//custom hooks
+import useGetAllProducts from '../../CustomHooks/useGetAllProducts';
 
 export interface Product {
   id: string,
@@ -41,8 +42,8 @@ export interface TransactionSecondType {
   id: string
   address: string,
   ordering_time: string,
-  paid: boolean,
-  delivery_fee: number,
+
+  
   sum: number
 }
 
@@ -67,26 +68,25 @@ function Home() {
   
   //redux actions
   const dispatch = useDispatch();
-  const { setFilterProducts, setProducts, setTransactionId } = bindActionCreators(actionsCreators, dispatch);
+  const { setTransactionId } = bindActionCreators(actionsCreators, dispatch);
 
   //queries
-  useQuery(GET_ALL_PRODUCTS, {
-    fetchPolicy: "network-only",
-    onCompleted(data) {
-      setProducts(data.getAllProducts);
-      setFilterProducts(data.getAllProducts);
-    },
+  useGetAllProducts();
+  const [getTransactionId, { data: transaction_data }] = useLazyQuery(_GET_TRANSACTION_ID, {
+    fetchPolicy: "network-only"
   });
-  const [getTransactionId, { data: transaction_data }] = useLazyQuery(GET_TRANSACTION_ID);
-  const [getAddress, { data: address_data }] = useLazyQuery(GET_USER);
+  const [getAddress, { data: address_data }] = useLazyQuery(_GET_USER, {
+    fetchPolicy: "network-only"
+  });
 
   //mutations
-  const [createTransaction] = useMutation(CREATE_TRANSACTION, {
+  const [createTransaction] = useMutation(_CREATE_TRANSACTION, {
     onCompleted(data) { 
       //if created a new one, set the new transaction id to the redux state
-      setTransactionId(data.createTransaction.id);
+      setTransactionId(data.createTransaction.transaction.id);
     }
   });
+
 
   //wait for the user to connect
   useEffect(() => {
@@ -94,40 +94,41 @@ function Home() {
       //get the address of the user
       getAddress({
         variables: {
-          userId: user.token.user_id
+          id: user.token.user_id
         }
       });
       
       //get the transaction of the user when he is connecting
       getTransactionId({
         variables: {
-          user_id: user.token.user_id
+          id: user.token.user_id
         }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.token, transaction_id]);
-
+  
   //when all the information that is needed is here, check if the user has an open transaction
   useEffect(() => {
     if(!user.token?.is_manager && transaction_data && address_data) {
-      if(transaction_data.getTransactionId) { //if the user already has an open transaction, get it
-        setTransactionId(transaction_data.getTransactionId);
+      //if the user already has an open transaction, get it
+      if(transaction_data.getUnpaidTransaction) { 
+        setTransactionId(transaction_data.getUnpaidTransaction);
       }
-      else { //if not, create a new one
+      //if not, create a new one
+      else { 
         //format today
         const formatted_now = formatDate();
 
         createTransaction({
           variables: {
             user_id: user.token?.user_id,
-            address: address_data.getUser.address,
-            paid: false,
+            address: address_data.userById.address,
             ordering_time: formatted_now
           }
         });
 
-        window.location.reload(); //refresh
+        //window.location.reload(); //refresh
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

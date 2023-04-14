@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import useStyles from "./ManageProductsStyles";
 
-//Apollo and graphql
-import { useQuery } from "@apollo/client";
-import { GET_ALL_PRODUCTS } from "../../Queries/Queries";
-
 //redux
-import { useDispatch, useSelector } from 'react-redux';
-import { ReduxState, actionsCreators } from "../../state";
-import { bindActionCreators } from 'redux';
+import { useSelector } from 'react-redux';
+import { ReduxState } from "../../state";
 
 //components
 import { Header } from "../../Common/Header/Header";
 import { ProductsGrid } from "../../Common/ProductGrid/ProductsGrid";
 import { NavigationBar } from "../../Common/NavigationBar/NavigationBar";
 import { AddProductDialog } from "./AddProductDialog/AddProductDialog";
+
+//custom hooks
+import useGetAllProducts from "../../CustomHooks/useGetAllProducts";
 
 const ManageProducts = () => {
     //styles
@@ -26,18 +24,8 @@ const ManageProducts = () => {
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
-    //redux actions
-    const dispatch = useDispatch();
-    const { setProducts, setFilterProducts } = bindActionCreators(actionsCreators, dispatch);
-
     //queries
-    useQuery(GET_ALL_PRODUCTS, {
-        fetchPolicy: "network-only",
-        onCompleted(data) {
-          setProducts(data.getAllProducts);
-          setFilterProducts(data.getAllProducts);
-        }
-    });
+    useGetAllProducts();
 
     const toggleAddProductDialog = () => {
         setOpen((prev) => !prev);

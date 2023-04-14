@@ -7,7 +7,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client";
-import { UPDATE_PRODUCT_DETAILS } from "../../../../Queries/Mutations";
+import { _UPDATE_PRODUCT_DETAILS } from "../../../../Queries/Mutations";
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,7 +72,7 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
     
     //states
     const [category_array, setCategoryArray] = useState<string[]>(category.split("#"));
-    const [is_image_uploaded, setIsImageUploaded] = useState<boolean>(img_uploaded);
+    const [is_image_uploaded, setIsImageUploaded] = useState<boolean>(img_uploaded ? img_uploaded : false);
     const [image, setImage] = React.useState<string>(default_image);
     const [err_text, setErrText] = useState<string>("");
 
@@ -84,7 +84,7 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
     const { updateProductDetails } = bindActionCreators(actionsCreators, dispatch);
 
     //mutations
-    const [updateProductDetailsM] = useMutation(UPDATE_PRODUCT_DETAILS);
+    const [updateProductDetailsM] = useMutation(_UPDATE_PRODUCT_DETAILS);
 
     const handleChange = (event: SelectChangeEvent<typeof category_array>) => {
         const { target: { value } } = event;

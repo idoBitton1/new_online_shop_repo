@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useStyles from "./LogInFormStyles";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import jwt from "jsonwebtoken";
 
 //form
 import * as Yup from "yup";
@@ -8,7 +9,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client"
-import { LOGIN_USER } from "../../../Queries/Mutations";
+import { _LOGIN_USER } from "../../../Queries/Mutations";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -39,13 +40,33 @@ export const LogInForm = () => {
     const { login } = bindActionCreators(actionsCreators, dispatch);
 
     //mutations
-    const [loginUser, { error }] = useMutation(LOGIN_USER, {
-        onCompleted: (data) => {
-            localStorage.setItem("token", data.loginUser.token);
-            login(data.loginUser.token);
+    const [loginUser, { data, error }] = useMutation(_LOGIN_USER, {
+        onCompleted: async(data) => {
+            const data_path = data.loginUser.userData[0];
+
+            const http_address = `http://localhost:8000/getToken?id=${data_path.id}&email=${data_path.email}&isManager=${data_path.isManager}`;
+
+            try {
+                const response = await fetch(http_address);
+            
+                if (!response.ok) {
+                  throw new Error(`Error! status: ${response.status}`);
+                }
+      
+                const result = await response.json();
+
+                localStorage.setItem("token", result);
+                login(result);
+              } 
+              catch (error) {
+                if (error instanceof Error) {
+                    console.log('error message: ', error.message);
+                } else {
+                    console.log('unexpected error: ', error);
+                }
+            }
         } //after logging, connect the user
     });
-
 
     
     //the initial values of the form

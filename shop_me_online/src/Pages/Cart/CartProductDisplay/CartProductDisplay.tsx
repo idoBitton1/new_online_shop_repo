@@ -3,9 +3,9 @@ import useStyles from "./CartProductDisplayStyles";
 
 //Apollo and graphql
 import { useMutation, useQuery } from "@apollo/client"
-import { GET_PRODUCT } from "../../../Queries/Queries";
-import { REMOVE_PRODUCT_FROM_CART, UPDATE_CART_PRODUCT_AMOUNT,
-         UPDATE_CART_PRODUCT_SIZE } from "../../../Queries/Mutations";
+import { _GET_PRODUCT } from "../../../Queries/Queries";
+import { _REMOVE_PRODUCT_FROM_CART, _UPDATE_CART_PRODUCT_AMOUNT,
+         _UPDATE_CART_PRODUCT_SIZE } from "../../../Queries/Mutations";
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,7 +72,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
     const { removeFromCart, changeQuantity, changeSize } = bindActionCreators(actionsCreators, dispatch);    
 
     //queries
-    useQuery(GET_PRODUCT, {
+    useQuery(_GET_PRODUCT, {
         fetchPolicy: "network-only",
         variables: {
             id: product_id
@@ -81,22 +81,22 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
             //set the product's infornation
             setOrderedProduct((prev) => {
                 return { ...prev, 
-                    name: data.getProduct.name,
-                    price: data.getProduct.price,
-                    category: data.getProduct.category,
-                    quantity: data.getProduct.quantity
+                    name: data.productById.name,
+                    price: data.productById.price,
+                    category: data.productById.category,
+                    quantity: data.productById.quantity
                 }
             });
 
             //add the price of this item to the total amount
-            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * data.getProduct.price}));
+            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * data.productById.price}));
         },
     });
 
     //mutations
-    const [removeProductFromCart] = useMutation(REMOVE_PRODUCT_FROM_CART);
-    const [updateCartProductAmount] = useMutation(UPDATE_CART_PRODUCT_AMOUNT);
-    const [updateCartProductSize] = useMutation(UPDATE_CART_PRODUCT_SIZE);
+    const [removeProductFromCart] = useMutation(_REMOVE_PRODUCT_FROM_CART);
+    const [updateCartProductAmount] = useMutation(_UPDATE_CART_PRODUCT_AMOUNT);
+    const [updateCartProductSize] = useMutation(_UPDATE_CART_PRODUCT_SIZE);
     
 
     //fetch the product image from the s3
@@ -165,7 +165,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
         updateCartProductAmount({
             variables: {
                 item_id: item_id,
-                new_amount: products_quantity
+                amount: products_quantity
             }
         });
 
@@ -200,7 +200,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
         updateCartProductSize({
             variables: {
                 item_id: item_id,
-                new_size: new_size
+                size: new_size
             }
         });
 
@@ -225,32 +225,40 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
             </div>
 
             <div className={classes.order_info}>
-                <p className={classes.order_info_headline}>Size</p>
-                <div className={classes.product_property}>
-                    {
-                        change_properties.size
-                        ?
-                        <FormControl variant="standard" className={classes.product_property_select}>
-                        <Select
-                            id="size_select"
-                            label="size"
-                            value={order_size}
-                            onChange={handleSizeSelect}
-                            >
-                            <MenuItem value={product_info.category.includes("shoes") ? "37" : "XXS"}>{product_info.category.includes("shoes") ? "37" : "XXS"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "38" : "XS"}>{product_info.category.includes("shoes") ? "38" : "XS"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "39" : "S"}>{product_info.category.includes("shoes") ? "39" : "S"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "40" : "M"}>{product_info.category.includes("shoes") ? "40" : "M"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "41" : "L"}>{product_info.category.includes("shoes") ? "41" : "L"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "42" : "XL"}>{product_info.category.includes("shoes") ? "42" : "XL"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "43" : "XXL"}>{product_info.category.includes("shoes") ? "43" : "XXL"}</MenuItem>
-                        </Select>
-                        </FormControl>
-                        :
-                        <p>{size} US</p>
-                    }
-                    <p className={classes.change_text} onClick={handleChangeSize}>change</p>
-                </div>
+                {
+                    size === undefined
+                    ?
+                    <>
+                    <p className={classes.order_info_headline}>Size</p>
+                    <div className={classes.product_property}>
+                        {
+                            change_properties.size
+                            ?
+                            <FormControl variant="standard" className={classes.product_property_select}>
+                            <Select
+                                id="size_select"
+                                label="size"
+                                value={order_size}
+                                onChange={handleSizeSelect}
+                                >
+                                <MenuItem value={product_info.category.includes("shoes") ? "37" : "XXS"}>{product_info.category.includes("shoes") ? "37" : "XXS"}</MenuItem>
+                                <MenuItem value={product_info.category.includes("shoes") ? "38" : "XS"}>{product_info.category.includes("shoes") ? "38" : "XS"}</MenuItem>
+                                <MenuItem value={product_info.category.includes("shoes") ? "39" : "S"}>{product_info.category.includes("shoes") ? "39" : "S"}</MenuItem>
+                                <MenuItem value={product_info.category.includes("shoes") ? "40" : "M"}>{product_info.category.includes("shoes") ? "40" : "M"}</MenuItem>
+                                <MenuItem value={product_info.category.includes("shoes") ? "41" : "L"}>{product_info.category.includes("shoes") ? "41" : "L"}</MenuItem>
+                                <MenuItem value={product_info.category.includes("shoes") ? "42" : "XL"}>{product_info.category.includes("shoes") ? "42" : "XL"}</MenuItem>
+                                <MenuItem value={product_info.category.includes("shoes") ? "43" : "XXL"}>{product_info.category.includes("shoes") ? "43" : "XXL"}</MenuItem>
+                            </Select>
+                            </FormControl>
+                            :
+                            <p>{size} US</p>
+                        }
+                        <p className={classes.change_text} onClick={handleChangeSize}>change</p>
+                    </div>
+                    </>
+                    :
+                    <></>
+                }
                 <p className={classes.order_info_headline}>Quantity</p>
                 <div className={classes.product_property}>
                     {

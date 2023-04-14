@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useStyles from "./RegisterFormStyles";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import * as uuid from 'uuid';
 
 //form
 import * as Yup from "yup";
@@ -8,7 +9,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client"
-import { CREATE_USER } from "../../../Queries/Mutations";
+import { _CREATE_USER, _CHECK_REGISTER_INFORMATION } from "../../../Queries/Mutations";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -48,12 +49,8 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
     const { login } = bindActionCreators(actionsCreators, dispatch);
 
     //mutations
-    const [createUser, { error }] = useMutation(CREATE_USER, {
-        onCompleted: (data) => {
-            localStorage.setItem("token", data.createUser.token);
-            login(data.createUser.token);
-        } //after registering, connect the user
-    });
+    const [checkRegisterInformation, { error: register_info_error }] = useMutation(_CHECK_REGISTER_INFORMATION);
+    const [createUser, { error: register_error }] = useMutation(_CREATE_USER);
 
     //the initial values of the form
     const initial_values: MyFormValues = {
@@ -69,21 +66,64 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
         email: Yup.string().email().required("Required")
     });
 
-    
+
 
     const onSubmit = async (values: MyFormValues) => {
+        const { first_name, last_name, password, address, email } = values;
+        let token;
+
+        //create an id
+        const my_id = uuid.v4();
+
+        await checkRegisterInformation({
+            variables: {
+                first_name: first_name,
+                last_name: last_name,
+                password: password,
+                address: address,
+                is_manager: is_manager
+            }
+        });
+
+        //if an error occured, return
+        if (register_info_error) {
+            return;
+        }
+
+        //get the token
+        const http_address = `http://localhost:8000/getToken?id=${my_id}&email=${email}&isManager=${is_manager}`;
 
         try {
-            const { first_name, last_name, password, address, email } = values;
+            const response = await fetch(http_address);
 
+            if (!response.ok) {
+              throw new Error(`Error! status: ${response.status}`);
+            }
+
+            token = await response.json();
+
+            localStorage.setItem("token", token);
+            login(token);
+          } 
+          catch (error) {
+            if (error instanceof Error) {
+                console.log('error message: ', error.message);
+            } else {
+                console.log('unexpected error: ', error);
+            }
+        }      
+
+        try {
             await createUser({
                 variables: {
-                    firstName: first_name,
-                    lastName: last_name,
+                    id: my_id,
+                    first_name: first_name,
+                    last_name: last_name,
                     password: password,
                     address: address,
                     email: email,
-                    isManager: is_manager
+                    is_manager: is_manager,
+                    token: token
                 }
             });
         } catch (err: any) {
@@ -112,9 +152,9 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         sx={{ marginRight: 1 }}
                         InputProps={{
                             startAdornment: (
-                              <InputAdornment position="start">
-                                <PermIdentityOutlinedIcon />
-                              </InputAdornment>
+                                <InputAdornment position="start">
+                                    <PermIdentityOutlinedIcon />
+                                </InputAdornment>
                             )
                         }}
                     />
@@ -126,9 +166,9 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         margin="normal"
                         InputProps={{
                             startAdornment: (
-                              <InputAdornment position="start">
-                                <PermIdentityOutlinedIcon />
-                              </InputAdornment>
+                                <InputAdornment position="start">
+                                    <PermIdentityOutlinedIcon />
+                                </InputAdornment>
                             )
                         }}
                     />
@@ -144,9 +184,9 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         fullWidth
                         InputProps={{
                             startAdornment: (
-                              <InputAdornment position="start">
-                                <LockOutlinedIcon />
-                              </InputAdornment>
+                                <InputAdornment position="start">
+                                    <LockOutlinedIcon />
+                                </InputAdornment>
                             )
                         }}
                     />
@@ -163,9 +203,9 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         helperText={<ErrorMessage name="email" />}
                         InputProps={{
                             startAdornment: (
-                              <InputAdornment position="start">
-                                <EmailOutlinedIcon />
-                              </InputAdornment>
+                                <InputAdornment position="start">
+                                    <EmailOutlinedIcon />
+                                </InputAdornment>
                             )
                         }}
                     />
@@ -173,30 +213,30 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                     <br />
                     {
                         is_manager
-                        ?
-                        <></>
-                        :
-                        <Field as={TextField} name="address"
-                            label="address"
-                            variant="outlined"
-                            value={props.values.address}
-                            onChange={props.handleChange}
-                            margin="normal"
-                            fullWidth
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <HomeOutlinedIcon />
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
+                            ?
+                            <></>
+                            :
+                            <Field as={TextField} name="address"
+                                label="address"
+                                variant="outlined"
+                                value={props.values.address}
+                                onChange={props.handleChange}
+                                margin="normal"
+                                fullWidth
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <HomeOutlinedIcon />
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
                     }
 
                     {is_manager ? <></> : <br />}
                     <br />
                     <h3 className={classes.sub_text} onClick={() => navigate('/login')}>
-                            already have an account?
+                        already have an account?
                     </h3>
 
                     <br />
@@ -206,9 +246,13 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         className={classes.register_btn}>
                         Register
                     </Button>
-                    
+
                     <Typography className={classes.err_text}>
-                        {error ? error.message : ""}
+                        {register_info_error ? register_info_error.message : ""}
+                    </Typography>
+
+                    <Typography className={classes.err_text}>
+                        {register_error ? register_error.message : ""}
                     </Typography>
                 </Form>
             )}

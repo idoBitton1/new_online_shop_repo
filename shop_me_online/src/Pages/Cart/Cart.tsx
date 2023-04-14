@@ -3,8 +3,8 @@ import useStyles from "./CartStyles";
 
 //Apollo and graphql
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { GET_USER_CART_PRODUCTS, CHECK_FOR_CREDIT_CARD, GET_USER, GET_TRANSACTION_ID, GET_ALL_PRODUCTS } from "../../Queries/Queries";
-import { CREATE_TRANSACTION, SET_TRANSACTION_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../../Queries/Mutations";
+import { _GET_USER_CART_PRODUCTS, _CHECK_FOR_CREDIT_CARD, _GET_USER, _GET_TRANSACTION_ID } from "../../Queries/Queries";
+import { _CREATE_TRANSACTION, _SET_TRANSACTION_AS_PAID, _UPDATE_PRODUCT_QUANTITY } from "../../Queries/Mutations";
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,17 +14,20 @@ import { bindActionCreators } from 'redux';
 //components
 import { Header } from "../../Common/Header/Header";
 import { CartProductDisplay } from "./CartProductDisplay/CartProductDisplay";
+import { CreditCardDialog } from "./CreditCardDialog/CreditCardDialog";
+import { ConfirmPurchaseDialog } from "./ConfirmPurchaseDialog/ConfirmPurchaseDialog";
 
 //material - ui
 import { Button } from "@mui/material";
+
+//custom hooks
+import useGetAllProducts from "../../CustomHooks/useGetAllProducts";
 
 //icons
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
 //function
-import { formatDate } from "../Home/Home";
-import { CreditCardDialog } from "./CreditCardDialog/CreditCardDialog";
-import { ConfirmPurchaseDialog } from "./ConfirmPurchaseDialog/ConfirmPurchaseDialog";
+import { CartProduct, formatDate } from "../Home/Home";
 
 export interface PaymentProps {
     sum_of_products: number,
@@ -63,37 +66,31 @@ const Cart = () => {
     const [err_text, setErrText] = useState<string>("");
 
     //queries
-    const [getTransactionId] = useLazyQuery(GET_TRANSACTION_ID, {
+    const [getTransactionId] = useLazyQuery(_GET_TRANSACTION_ID, {
         fetchPolicy: "network-only",
         onCompleted(data) {
-            setTransactionId(data.getTransactionId);
+            setTransactionId(data.getUnpaidTransaction);
         },
     });
     //get the user's address
-    const { data: address_data } = useQuery(GET_USER, {
+    const { data: address_data } = useQuery(_GET_USER, {
         fetchPolicy: "network-only",
         variables: {
-            userId: user.token?.user_id
+            id: user.token?.user_id
         }
     });
     //get all products, because the cart products dont hold the same information as the 
     //regular products is holding (such as the price, img_location)
-    useQuery(GET_ALL_PRODUCTS, {
-        fetchPolicy: "network-only",
-        onCompleted(data) {
-          setProducts(data.getAllProducts);
-          setFilterProducts(data.getAllProducts);
-        }
-    });
+    useGetAllProducts();
     //when the info comes back, set the information in the cart redux state
-    const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
+    const [getCartProducts] = useLazyQuery(_GET_USER_CART_PRODUCTS, {
         fetchPolicy: "network-only",
-        onCompleted(data) {
-            setCart(data.getUserCartProducts);
-        }
+        onCompleted(data) {           
+            setCart(convertType(data.transactionById.cartsByTransactionId.nodes));
+        },
     });
     //checks if the user has a credit card set
-    useQuery(CHECK_FOR_CREDIT_CARD, {
+    useQuery(_CHECK_FOR_CREDIT_CARD, {
         fetchPolicy: "network-only",
         variables: {
             id: user.token?.user_id
@@ -105,14 +102,14 @@ const Cart = () => {
 
     //mutations
     //update the quantity of an item  
-    const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
+    const [updateProductQuantity] = useMutation(_UPDATE_PRODUCT_QUANTITY);
     //sets the transaction as paid
-    const [setTransactionAsPaid] = useMutation(SET_TRANSACTION_AS_PAID);
+    const [setTransactionAsPaid] = useMutation(_SET_TRANSACTION_AS_PAID);
     //create a transaction
-    const [createTransaction] = useMutation(CREATE_TRANSACTION, {
+    const [createTransaction] = useMutation(_CREATE_TRANSACTION, {
         onCompleted(data) { 
           //if created a new one, set the new transaction id to the redux state
-          setTransactionId(data.createTransaction.id);
+          setTransactionId(data.createTransaction.transaction.id);
         }
     });
 
@@ -122,8 +119,7 @@ const Cart = () => {
         if (user.token && transaction_id) {
             getCartProducts({
                 variables: {
-                    user_id: user.token.user_id,
-                    transaction_id: transaction_id
+                    id: transaction_id
                 }
             });
         }
@@ -136,7 +132,7 @@ const Cart = () => {
             //so fetch it
             getTransactionId({
                 variables: {
-                    user_id: user.token.user_id
+                    id: user.token.user_id
                 }
             });
         }
@@ -188,8 +184,8 @@ const Cart = () => {
         const formatted_now = formatDate();
         setTransactionAsPaid({
             variables: {
-                transaction_id: transaction_id,
-                new_time: formatted_now
+                id: transaction_id,
+                ordering_time: formatted_now
             }
         });
 
@@ -197,8 +193,7 @@ const Cart = () => {
         createTransaction({
             variables: {
                 user_id: user.token?.user_id,
-                address: address_data.getUser.address,
-                paid: false,
+                address: address_data.userById.address,
                 ordering_time: formatted_now
             }
         });
@@ -233,12 +228,28 @@ const Cart = () => {
             await updateProductQuantity({
                 variables: {
                     id: product_id,
-                    newQuantity: quantity - amount
+                    quantity: quantity - amount
                 }
             });
         } catch (err: any) {
             console.error(err.message);
         }
+    }
+
+    //converts the type of the object that comes from the postgraphile api because 
+    //it comes without the '_' between words
+    const convertType = (objects: any[]): CartProduct[] => {
+        const original = objects;
+        let all_products: CartProduct[] = [];
+        original.map((product: any) => all_products.push({
+            item_id: product.itemId, 
+            transaction_id: product.transactionId,
+            product_id: product.productId,
+            amount: product.amount,
+            size: product.size
+        }));
+
+        return all_products;
     }
 
     const toggleCreditCardDialog = () => {

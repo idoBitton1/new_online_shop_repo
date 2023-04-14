@@ -7,7 +7,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client";
-import { ADD_PRODUCT_TO_PRODUCTS } from "../../../Queries/Mutations";
+import { _ADD_PRODUCT_TO_PRODUCTS } from "../../../Queries/Mutations";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -79,7 +79,7 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
     const { addToProducts } = bindActionCreators(actionsCreators, dispatch);
 
     //mutations
-    const [addProductToProducts] = useMutation(ADD_PRODUCT_TO_PRODUCTS);
+    const [addProductToProducts] = useMutation(_ADD_PRODUCT_TO_PRODUCTS);
     
     const handleChange = (event: SelectChangeEvent<typeof category_array>) => {
         const { target: { value } } = event;
@@ -158,13 +158,13 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
         }).then((res) => {
             //create the new product
             const product: Product = {
-                id: res.data.addProductToProducts.id,
-                name: res.data.addProductToProducts.name,
-                price: res.data.addProductToProducts.price,
-                quantity: res.data.addProductToProducts.quantity,
-                category: res.data.addProductToProducts.category,
-                img_location: res.data.addProductToProducts.img_location,
-                img_uploaded: res.data.addProductToProducts.img_uploaded
+                id: res.data.createProduct.product.id,
+                name: res.data.createProduct.product.name,
+                price: res.data.createProduct.product.price,
+                quantity: res.data.createProduct.product.quantity,
+                category: res.data.createProduct.product.category,
+                img_location: res.data.createProduct.product.img_location,
+                img_uploaded: res.data.createProduct.product.img_uploaded
             }
 
             //add the product to the products after the mutation succeeds

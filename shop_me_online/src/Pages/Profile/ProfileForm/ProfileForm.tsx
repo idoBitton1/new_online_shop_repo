@@ -7,8 +7,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 //Apollo and graphql
 import { useQuery, useMutation } from "@apollo/client"
-import { GET_USER, CHECK_FOR_CREDIT_CARD } from "../../../Queries/Queries";
-import { UPDATE_USER_INFORMATION, REMOVE_CREDIT_CARD } from "../../../Queries/Mutations";
+import { _GET_USER, _CHECK_FOR_CREDIT_CARD } from "../../../Queries/Queries";
+import { _UPDATE_USER_INFORMATION, _REMOVE_CREDIT_CARD } from "../../../Queries/Mutations";
 
 //redux
 import { useSelector } from 'react-redux';
@@ -47,29 +47,35 @@ export const ProfileForm = () => {
     const [open, setOpen] = useState<boolean>(false);
 
     //queries
-    const { data: user_data, refetch } = useQuery(GET_USER, {
+    const { data: user_data, refetch } = useQuery(_GET_USER, {
         variables: {
-            userId: user.token?.user_id
+            id: user.token?.user_id
+        },
+        onCompleted(data) {
+            setIsManager(data.userById.isManager);
         }
     });
-    const { data: credit_data } = useQuery(CHECK_FOR_CREDIT_CARD, {
+    useQuery(_CHECK_FOR_CREDIT_CARD, {
         fetchPolicy: "network-only",
         variables: {
             id: user.token?.user_id
-        }
+        },
+        onCompleted(data) {
+            setHasCreditCard(data.checkForCreditCard);
+        },
     });
 
     //mutations
-    const [updateUserInformation, { error }] = useMutation(UPDATE_USER_INFORMATION);
-    const [removeCreditCard] = useMutation(REMOVE_CREDIT_CARD);
+    const [updateUserInformation, { error }] = useMutation(_UPDATE_USER_INFORMATION);
+    const [removeCreditCard] = useMutation(_REMOVE_CREDIT_CARD);
 
     //the initial values of the form to the user information
     const initial_values: MyFormValues ={
-        first_name: user_data ? user_data.getUser.first_name : "",
-        last_name: user_data ? user_data.getUser.last_name : "",
-        password: user_data ? user_data.getUser.password : "",
-        address: user_data ? user_data.getUser.address : "",
-        email: user_data ? user_data.getUser.email : ""
+        first_name: user_data ? user_data.userById.firstName : "",
+        last_name: user_data ? user_data.userById.lastName : "",
+        password: user_data ? user_data.userById.password : "",
+        address: user_data ? user_data.userById.address : "",
+        email: user_data ? user_data.userById.email : ""
     }
 
     //cvalidation schema for the form
@@ -83,34 +89,21 @@ export const ProfileForm = () => {
 
 
 
-    useEffect(() => {
-        if(user_data) {
-            setIsManager(user_data.getUser.is_manager);
-        }
-    }, [user_data]);
-
     const onSubmit = (values: MyFormValues) => {
         //update db        
         updateUserInformation({
             variables: {
                 id: user.token?.user_id,
-                firstName: values.first_name,
-                lastName: values.last_name,
+                first_name: values.first_name,
+                last_name: values.last_name,
                 password: values.password,
                 address: is_manager ? "" : values.address,
-                email: values.email,
-                isManager: is_manager
+                email: values.email
             }
         });
 
         refetch();
     }
-
-    useEffect(() => {
-        if(credit_data) {
-            setHasCreditCard(credit_data.checkForCreditCard);
-        }
-    }, [credit_data]);
 
     const handleCreditCardClick = () => {
         toggleDialog();

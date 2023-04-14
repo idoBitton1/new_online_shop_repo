@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import useStyles from "./WishlistProductDisplayStyles";
 
 //Apollo and graphql
-import { useLazyQuery, useMutation } from "@apollo/client"
-import { GET_PRODUCT } from "../../../Queries/Queries";
-import { DELETE_PRODUCT_FROM_WISHLIST } from "../../../Queries/Mutations";
+import { useLazyQuery } from "@apollo/client"
+import { _GET_PRODUCT } from "../../../Queries/Queries";
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +32,7 @@ interface MyProps {
     img_uploaded: boolean
 }
 
-export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, img_location, img_uploaded}) => {
+export const WishlistProductDisplay: React.FC<MyProps> = ({ user_id, product_id, img_location, img_uploaded }) => {
     //styles
     const { classes } = useStyles();
 
@@ -59,15 +58,12 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
     });
 
     //queries
-    const [ getProduct, { data: product_data }]  = useLazyQuery(GET_PRODUCT);
-
-    //mutations
-    const [deleteProductFromWishlist] = useMutation(DELETE_PRODUCT_FROM_WISHLIST);
+    const [getProduct, { data: product_data }] = useLazyQuery(_GET_PRODUCT);
 
 
     //fetch the product image from the s3
     React.useEffect(() => {
-        if(img_uploaded) {
+        if (img_uploaded) {
             setImage(aws.s3.getSignedUrl('getObject', {
                 Bucket: aws.bucket_name,
                 Key: img_location,
@@ -79,7 +75,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
 
     //fetch if the product_id is not null
     useEffect(() => {
-        if(product_id){
+        if (product_id) {
             getProduct({
                 variables: {
                     id: product_id
@@ -91,23 +87,23 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
 
     //set the information in the variables to display it
     useEffect(() => {
-        if(product_data) {
+        if (product_data) {
             setProductInfo((prev) => {
                 return {
                     id: prev.id,
-                    name: product_data.getProduct.name,
-                    price: product_data.getProduct.price,
-                    quantity: product_data.getProduct.quantity,
-                    category: product_data.getProduct.category,
-                    img_location: product_data.getProduct.img_location,
-                    img_uploaded: product_data.getProduct.img_uploaded
+                    name: product_data.productById.name,
+                    price: product_data.productById.price,
+                    quantity: product_data.productById.quantity,
+                    category: product_data.productById.category,
+                    img_location: product_data.productById.img_location,
+                    img_uploaded: product_data.productById.img_uploaded
                 }
             })
 
-            if(products.products.length !== 0) {
+            if (products.products.length !== 0) {
                 let index = products.products.findIndex((product) => product.id === product_id);
                 //a more accurate quantity
-                setProductInfo((prev) => ({...prev, quantity: products.products[index].quantity}));
+                setProductInfo((prev) => ({ ...prev, quantity: products.products[index].quantity }));
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,12 +111,21 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
 
     //remove the item from the wishlist
     const handleDeleteClick = () => {
-        deleteProductFromWishlist({
-            variables: {
-                userId: user_id,
-                productId: product_id
-            }
-        });
+        //the delete mutation does not works with postgraphile so i did an http request
+        const http_address = `http://localhost:8000/deleteFromWishlist?user_id=${user_id}&product_id=${product_id}`;
+        fetch(http_address)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Error! status: ${res.status}`);
+                }
+            })
+            .catch(err => {
+                if (err instanceof Error) {
+                    console.log('error message: ', err.message);
+                } else {
+                    console.log('unexpected error: ', err);
+                }
+            });
 
         removeFromWishlist({
             user_id: user_id,
@@ -131,42 +136,42 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
     const toggleDialog = () => {
         SetOpenDialog((prev) => !prev);
     }
-    
+
     return (
         <>
-        <div className={classes.wishlist_product_container}>
-            <div className={classes.product_info_section}>
-                <img src={image} alt="product" className={classes.product_img} />
-                <div className={classes.product_info}>
-                    <p className={classes.product_name}>{product_info.name}</p>
-                    <p>price for each: {product_info.price}$</p>
-                    <p>Left in stock: {product_info.quantity}</p>
-                    
-                    <Button variant="contained"
-                    onClick={toggleDialog}>
-                        Buy now
-                    </Button>
+            <div className={classes.wishlist_product_container}>
+                <div className={classes.product_info_section}>
+                    <img src={image} alt="product" className={classes.product_img} />
+                    <div className={classes.product_info}>
+                        <p className={classes.product_name}>{product_info.name}</p>
+                        <p>price for each: {product_info.price}$</p>
+                        <p>Left in stock: {product_info.quantity}</p>
+
+                        <Button variant="contained"
+                            onClick={toggleDialog}>
+                            Buy now
+                        </Button>
+                    </div>
+                </div>
+
+                <div>
+                    <button className={classes.delete_btn}>
+                        <CloseIcon onClick={handleDeleteClick} />
+                    </button>
                 </div>
             </div>
 
-            <div>
-                <button className={classes.delete_btn}>
-                    <CloseIcon onClick={handleDeleteClick} />
-                </button>
-            </div>
-        </div>
-
-        <OrderProduct 
-        is_open={open_dialog}
-        toggleDialog={toggleDialog}
-        id={product_id}
-        name={product_info.name}
-        price={product_info.price}
-        quantity={product_info.quantity}
-        category={product_info.category}
-        img_location={product_info.img_location}
-        img_uploaded={product_info.img_uploaded}
-        />
+            <OrderProduct
+                is_open={open_dialog}
+                toggleDialog={toggleDialog}
+                id={product_id}
+                name={product_info.name}
+                price={product_info.price}
+                quantity={product_info.quantity}
+                category={product_info.category}
+                img_location={product_info.img_location}
+                img_uploaded={product_info.img_uploaded}
+            />
         </>
     )
 }

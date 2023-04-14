@@ -35,10 +35,11 @@ type reduced = {
     sum: number
 }
 
+const port = process.env.REACT_APP_MANAGE_DB_PORT;
 const manage_db_client = new ApolloClient({
     cache: new InMemoryCache(),
-    uri: "http://localhost:4000/graphql"
-  });
+    uri: `http://localhost:${port}/graphql`
+});
 
 const ShipOrders = () => {
     //styles
@@ -125,7 +126,8 @@ const ShipOrders = () => {
 
     const checkDistance = async(origin_address: string, destination_address: string) => {
         //setup
-        const key: string = "";
+        const key: string = process.env.REACT_APP_DISTANCE_API_KEY ? process.env.REACT_APP_DISTANCE_API_KEY : "";
+        
         let http_address = `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${origin_address}&destinations=${destination_address}&key=${key}`;
 
         let delivery_fee: number = 0;

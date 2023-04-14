@@ -7,7 +7,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client"
-import { ADD_CREDIT_CARD } from "../../Queries/Mutations";
+import { _ADD_CREDIT_CARD } from "../../Queries/Mutations";
 
 //redux
 import { useSelector } from 'react-redux';
@@ -66,7 +66,7 @@ export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCar
     });
 
     //mutations
-    const [addCreditCard] = useMutation(ADD_CREDIT_CARD);
+    const [addCreditCard] = useMutation(_ADD_CREDIT_CARD);
 
     //initial values of the form
     const initial_values: MyFormValues = {
@@ -96,7 +96,7 @@ export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCar
         addCreditCard({
             variables: {
                 id: user.token?.user_id,
-                creditCardNumber: values.card_number
+                credit_card_number: values.card_number
             }
         });
 
