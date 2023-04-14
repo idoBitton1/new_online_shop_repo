@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 import { UserActions } from "../actions";
-import { UserActionType } from "../action_types"
+import { UserActionType } from "../action_types";
 
 export interface MyToken {
     name: string,
@@ -20,8 +20,9 @@ const initial_state: UserInfo = {
     token: null,
     fetch_info: true
 }
+
 //localStorage.removeItem("token");
-let token = localStorage.getItem("token")
+let token = localStorage.getItem("token");
 if(token) {
     const decoded_token: MyToken = jwtDecode<MyToken>(token);
 
