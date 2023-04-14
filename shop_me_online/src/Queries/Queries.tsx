@@ -91,11 +91,7 @@ query Query {
 }
 `;
 
-export const howManyProductsOrdered = gql`
-query Query($id: String!) {
-  howManyProductsOrdered(id: $id)
-}
-`;
+////////////////////////////////////////////////
 
 //query to the algorithm server on port 8080
 export const GET_MINIMUM_SHIPMENT_COST = gql`
@@ -103,6 +99,111 @@ query GetMinimumCost($all_supply: [Int!]!, $all_demand: [Int!]!, $costs_mat: [[F
   getMinimumCost(all_supply: $all_supply, all_demand: $all_demand, costs_mat: $costs_mat) {
     resMat
     totalCost
+  }
+}
+`;
+
+////////////////////////////////////////////////
+
+export const _GET_ALL_PRODUCTS = gql`
+query MyQuery {
+  allProducts {
+    edges {
+      node {
+        id
+        name
+        price
+        quantity
+        category
+        imgLocation
+        imgUploaded
+      }
+    }
+  }
+}
+`;
+
+export const _GET_USER_CART_PRODUCTS = gql`
+query MyQuery($id: UUID!) {
+  transactionById(id: $id) {
+    cartsByTransactionId {
+      nodes {
+        itemId
+        productId
+        transactionId
+        amount
+        size
+      }
+    }
+  }
+}
+`;
+
+export const _GET_PRODUCT = gql`
+query MyQuery($id: UUID!) {
+  productById(id: $id) {
+    name
+    price
+    quantity
+    category
+    imgLocation
+  }
+}
+`;
+
+export const _GET_USER_WISHLIST = gql`
+query MyQuery($user_id: UUID!) {
+  getUserWishlist(_userId: $user_id) {
+    nodes {
+      userId
+      productId
+    }
+  }
+}
+`;
+
+export const _GET_USER = gql`
+query MyQuery($id: UUID!) {
+  userById(id: $id) {
+    firstName
+    lastName
+    password
+    address
+    email
+    isManager
+  }
+}
+`;
+
+export const _CHECK_FOR_CREDIT_CARD = gql`
+query MyQuery($id: UUID!) {
+  checkForCreditCard(_id: $id)
+}
+`;
+
+export const _GET_TRANSACTION_ID = gql`
+query MyQuery($id: UUID!) {
+  getUnpaidTransaction(_userId: $id)
+}
+`;
+
+export const _GET_TRANSACTION = gql`
+query MyQuery($id: UUID!) {
+  transactionById(id: $id) {
+    paid
+  }
+}
+`;
+
+export const _GET_TRANSACTIONS = gql`
+query MyQuery {
+  getTransactions {
+    nodes {
+      id
+      address
+      orderingTime
+      sum
+    }
   }
 }
 `;
