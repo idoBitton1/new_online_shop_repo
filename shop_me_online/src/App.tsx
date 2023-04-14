@@ -18,9 +18,10 @@ import Profile from './Pages/Profile/Profile';
 import ShipOrders from './Pages/ShipOrders/ShipOrders';
 import ManageProducts from './Pages/ManageProducts/ManageProducts';
 
+const port = process.env.REACT_APP_ALGORITHM_SERVER_PORT;
 const algorithm_client = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: "http://localhost:8080/graphql"
+  uri: `http://localhost:${port}/graphql`
 });
 
 function App() {
