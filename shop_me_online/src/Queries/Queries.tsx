@@ -133,6 +133,9 @@ query MyQuery($id: UUID!) {
         transactionId
         amount
         size
+        productByProductId {
+          price
+        }
       }
     }
   }
@@ -204,6 +207,15 @@ query MyQuery {
       orderingTime
       sum
     }
+  }
+}
+`;
+
+export const _GET_CART_ITEM = gql`
+query MyQuery($item_id: UUID!) {
+  cartByItemId(itemId: $item_id) {
+    amount
+    size
   }
 }
 `;

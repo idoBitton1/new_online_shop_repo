@@ -48,7 +48,7 @@ const Cart = () => {
 
     //redux actions
     const dispatch = useDispatch();
-    const { setCart, updateSupply, setTransactionId, setProducts, setFilterProducts } = bindActionCreators(actionsCreators, dispatch);
+    const { setCart, updateSupply, setTransactionId } = bindActionCreators(actionsCreators, dispatch);
 
     //const value
     const delivery_price = 30;
@@ -85,8 +85,16 @@ const Cart = () => {
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(_GET_USER_CART_PRODUCTS, {
         fetchPolicy: "network-only",
-        onCompleted(data) {           
-            setCart(convertType(data.transactionById.cartsByTransactionId.nodes));
+        onCompleted(data) {        
+            const data_arr = data.transactionById.cartsByTransactionId.nodes;
+            //sum the total amount of the products
+            let total_price = 0;
+            for(let i=0; i<data_arr.length; i++) {
+                total_price += data_arr[i].productByProductId.price * data_arr[i].amount;
+            }
+            setPaymentInformation((prev) => ({...prev, sum_of_products: total_price, total: total_price + payment_information.delivery}));
+            //set the products as the cart
+            setCart(convertType(data_arr));
         },
     });
     //checks if the user has a credit card set
@@ -142,7 +150,7 @@ const Cart = () => {
     //change the total with every change in the amount of one of the fields 
     useEffect(() => {
         setPaymentInformation((prev) => ({...prev, total: payment_information.sum_of_products + payment_information.delivery}));
-    }, [payment_information.sum_of_products, payment_information.delivery]);
+    }, [payment_information.sum_of_products]);
 
     //the function of the pay button click
     const handlePayment = async() => {
@@ -325,8 +333,6 @@ const Cart = () => {
                                 <CartProductDisplay
                                     item_id={cart_product.item_id}
                                     product_id={cart_product.product_id}
-                                    amount={cart_product.amount}
-                                    size={cart_product.size}
                                     img_location={img_location}
                                     img_uploaded={img_uploaded}
                                     setPaymentInformation={setPaymentInformation}

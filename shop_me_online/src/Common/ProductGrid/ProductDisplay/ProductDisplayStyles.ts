@@ -7,7 +7,7 @@ const useStyles = makeStyles()({
     },
 
     product_img: {
-        width: "100%",
+        width: "90%",
         borderRadius: "15px",
         aspectRatio: "1.3 / 1",
         cursor: "pointer",

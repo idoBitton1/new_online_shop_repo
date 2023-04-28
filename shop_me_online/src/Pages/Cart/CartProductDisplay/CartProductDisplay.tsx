@@ -3,7 +3,7 @@ import useStyles from "./CartProductDisplayStyles";
 
 //Apollo and graphql
 import { useMutation, useQuery } from "@apollo/client"
-import { _GET_PRODUCT } from "../../../Queries/Queries";
+import { _GET_PRODUCT, _GET_CART_ITEM } from "../../../Queries/Queries";
 import { _REMOVE_PRODUCT_FROM_CART, _UPDATE_CART_PRODUCT_AMOUNT,
          _UPDATE_CART_PRODUCT_SIZE } from "../../../Queries/Mutations";
 
@@ -27,8 +27,6 @@ import default_image from "../../../Images/default.png";
 interface MyProps {
     item_id: string,
     product_id: string,
-    amount: number,
-    size: string,
     img_location: string,
     img_uploaded: boolean,
     setPaymentInformation: React.Dispatch<React.SetStateAction<PaymentProps>>
@@ -46,15 +44,15 @@ interface ChangeProperties {
     quantity: boolean
 }
 
-export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amount, size, img_location, img_uploaded, setPaymentInformation}) => {
+export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, img_location, img_uploaded, setPaymentInformation}) => {
     //styles
     const { classes } = useStyles();
     
     //states
     const [image, setImage] = useState<string>(default_image);
     const [err_text, setErrText] = useState<string>("");
-    const [order_amount, setOrderAmount] = useState<number>(amount);
-    const [order_size, setOrderSize] = useState<string>(size);
+    const [order_amount, setOrderAmount] = useState<number>(0);
+    const [order_size, setOrderSize] = useState<string>("");
     const [change_properties, setChange] = useState<ChangeProperties>({ size: false, quantity: false });  
     const [product_info, setOrderedProduct] = useState<ProductProperties>({
         name: "",
@@ -87,9 +85,16 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
                     quantity: data.productById.quantity
                 }
             });
-
-            //add the price of this item to the total amount
-            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * data.productById.price}));
+        },
+    });
+    useQuery(_GET_CART_ITEM, {
+        fetchPolicy: "network-only",
+        variables: {
+            item_id: item_id
+        },
+        onCompleted(data) {
+            setOrderAmount(data.cartByItemId.amount);
+            setOrderSize(data.cartByItemId.size);
         },
     });
 
@@ -111,14 +116,6 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [img_uploaded]) // upadtes when changing 
 
-    //update the total amount, if changed
-    useEffect(() => {
-        //add the price of this item to the total amount
-        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * product_info.price}));
-        
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [order_amount]);
-
     //remove the item from the cart
     const handleDeleteClick = () => {       
         removeProductFromCart({
@@ -129,10 +126,12 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
 
         removeFromCart(item_id);
 
+        //window.location.reload();
         //remove the item's price from the total amount
-        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_amount * product_info.price}));
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_amount * product_info.price}));        
     }
 
+    //open or close the select component of the quantity
     const handleChangeQuantity = () => {
         setChange((prev) => {
             return {
@@ -152,8 +151,10 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
             return;
         }
 
-        //remove the item's price from the total amount, and it will re-add the new amount in the useEffect
-        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_amount * product_info.price}));
+        //remove the item's price from the total amount and add the new total amount
+        const old_product_total = order_amount * product_info.price;
+        const new_product_total = products_quantity * product_info.price;
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - old_product_total + new_product_total}));
 
         //update the state
         setOrderAmount(products_quantity);
@@ -226,7 +227,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
 
             <div className={classes.order_info}>
                 {
-                    size === undefined
+                    order_size !== ""
                     ?
                     <>
                     <p className={classes.order_info_headline}>Size</p>
@@ -251,7 +252,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
                             </Select>
                             </FormControl>
                             :
-                            <p>{size} US</p>
+                            <p>{order_size} US</p>
                         }
                         <p className={classes.change_text} onClick={handleChangeSize}>change</p>
                     </div>
@@ -259,6 +260,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
                     :
                     <></>
                 }
+
                 <p className={classes.order_info_headline}>Quantity</p>
                 <div className={classes.product_property}>
                     {
